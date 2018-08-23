@@ -4,7 +4,7 @@ body {
 }
 
 #mainContainer {
-	width: 350px;
+	width: 500px;
 	height: 450px;
 	overflow: hidden;
 	/*background-color: #f0f8ff;*/
@@ -125,6 +125,7 @@ a:hover {
 #scriptsList #tagsList {
 	height: 24px;
 	border-bottom: 1px solid #e8e2eb;
+	overflow: hidden;
 }
 
 #scriptsList #tagsList .tag {
@@ -155,14 +156,14 @@ a:hover {
 .scripts-list_item .title {
 	display: block;
 	height: 100%;
-	width: calc(100% - 50px);
+	width: calc(100% - 90px);
 	float: left;
 	padding-left: 13px;
 }
 
 #scriptsList #listContainer {
 	overflow-y: auto;
-	height: 396px;
+	height: 371px;
 }
 
 #scriptsList .scripts-list_item:hover {
@@ -186,10 +187,26 @@ a:hover {
 	opacity: 0.6;
 }
 
+#scriptsList .scripts-list_item .copy {
+	background-image: url(/images/copy.svg);
+	cursor: pointer;
+	float: right;
+	width: 18px;
+	height: 18px;
+	background-size: 18px 18px;
+	opacity: 1;
+	margin: 11px 18px 0 0;
+	transition: opacity 0.15s 0s ease;
+}
+
+#scriptsList .scripts-list_item .copy:hover {
+	opacity: 0.6;
+}
+
 #addingScript {
 	position: absolute;
 	top: 0;
-	left: -357px;
+	left: -500px;
 	height: inherit;
 	width: inherit;
 
@@ -204,9 +221,13 @@ a:hover {
 
 #addingScript .textarea {
 	width: 100%;
-	height: calc(100% - 54px - 36px);
+	height: calc(100% - 54px - 32px);
 	resize: none;
 	margin-top: -2px;
+	padding: 5px;
+	box-sizing: border-box;
+	line-height: 16px;
+	font-size: 14px
 }
 
 #addingScript .textarea:focus {
@@ -214,15 +235,16 @@ a:hover {
 }
 
 #addingScript #scriptTag {
-	height: 30px;
-	width: calc(100% - 10px);
+	height: 37px;
+	width: 100%;
 	font-size: 16px;
-	line-height: 35px;
+	line-height: 37px;
 	outline: none;
 	margin-top: -5px;
 	padding-left: 5px;
 	padding-right: 5px;
-	color: #004affc7;
+	box-sizing: border-box;
+	color: #004AFF;
 }
 
 .screen {

@@ -38,6 +38,7 @@ $(document).ready(function() {
         addingScreen.find('#scriptName').val('');
         addingScreen.find('#scriptCode').val('');
         addingScreen.find('#scriptTag').val('');
+        addingScreen.find('#scriptId').val('');
     }
 
     /**
@@ -62,7 +63,7 @@ $(document).ready(function() {
         var id = addingScreen.find("#scriptId").val();
 
         if (title.length === 0) {
-            alert('Не указано название скрипта');
+            alert('Не указано название');
             return;
         }
 
@@ -92,6 +93,7 @@ $(document).ready(function() {
             scriptsList.empty();
 
             fillList();
+            fillTags();
         });
     }
 
@@ -131,6 +133,7 @@ $(document).ready(function() {
             scriptsList.empty();
 
             fillList();
+            fillTags();
         });
     }
 
@@ -166,7 +169,45 @@ $(document).ready(function() {
 
             addingScreen.addClass("active");
         });
+    }
 
+    /**
+     * Копировать текст заметки
+     */
+    function actionCopyTextScript(e)
+    {
+        chrome.storage.sync.get('scripts', function (obj) {
+            var scripts;
+
+            if (obj.scripts != null) {
+                scripts = obj.scripts;
+            } else {
+                alert('Ошибка! Скрипт не найден..');
+                return;
+            }
+
+            var id = e.target.parentNode.getAttribute('data-id');
+
+            if (scripts[id] === null) {
+                alert('Ошибка! Скрипт не найден..');
+            }
+
+            var script = scripts[id];
+            copy(script.code);
+        });
+    }
+
+    function copy(str){
+        let tmp   = document.createElement('input'),
+            focus = document.activeElement;
+
+        tmp.value = str;
+
+        document.body.appendChild(tmp);
+        tmp.select();
+        document.execCommand('copy');
+        document.body.removeChild(tmp);
+        focus.focus();
     }
 
 
@@ -190,7 +231,8 @@ $(document).ready(function() {
             for (var key in scripts) {
                 var element = $('<div class="scripts-list_item">' +
                     '<span class="title">' + scripts[key].name + '</span>' +
-                    '<span class="delete"></span>' +
+                    '<span class="delete" title="Удалить"></span>' +
+                    '<span class="copy"  title="Скопировать код"></span>' +
                     '</div>');
 
                 element.attr('data-tag', scripts[key]['tag']);
@@ -243,16 +285,23 @@ $(document).ready(function() {
         /**
          * Кнопка: правка элемента
          */
-        $("#listContainer .scripts-list_item .title").on('dblclick', function(e) {
-            actionToEditScript(e);
+        $("#listContainer .scripts-list_item .title").on('dblclick', function(e1) {
+            actionToEditScript(e1);
         });
 
         /**
          * Action: удаление элемента
          */
-        $("#listContainer .scripts-list_item .delete").click(function(e) {
-            actionDeleteScript(e);
+        $("#listContainer .scripts-list_item .delete").on('click', function(e2) {
+            actionDeleteScript(e2);
         }) ;
+
+        /**
+         * Кнопка: копировать
+         */
+        $("#listContainer .scripts-list_item .copy").on('click', function(e3) {
+            actionCopyTextScript(e3);
+        });
     }
 
     function registerItemListTags()
@@ -270,29 +319,26 @@ $(document).ready(function() {
      * Фильтрация элементов по активным тегам
      */
     function filterListItems() {
-        alert('11');
-        var activeTags = $('#tagsList .active');
+        var activeTag = $('#tagsList .active');
 
         var listItems = $('#listContainer .scripts-list_item');
         if (listItems.length === 0) {
             return;
         }
 
-        if (activeTags.length === 0) {
-            for (var keyItem in listItems) {
-                listItems[keyItem].removeClass('hide');
-            }
+        if (activeTag.length === 0) {
+            listItems.each(function(ind, element) {
+                element.classList.remove('hide');
+            });
         } else {
-            if  (listItems.length > 0) {
-                for (var keyItem in listItems) {
-                    // alert(listItems[keyItem].innerHTML);
-                    if (listItems[keyItem].attr('data-tag').length > 0 && activeTags.indexOf(listItems[keyItem].getAttribute('data-tag')) !== -1) {
-                        listItems[keyItem].removeClass('hide');
-                    } else {
-                        listItems[keyItem].addClass('hide');
-                    }
+            listItems.each(function(ind, element) {
+                if (element.getAttribute('data-tag') !== activeTag.attr('data-tag')) {
+                    element.classList.add('hide');
+                } else {
+                    element.classList.remove('hide');
                 }
-            }
+
+            });
         }
     }
 
@@ -306,21 +352,19 @@ $(document).ready(function() {
         var nowTagEl = $(e.target);
         var nowTagKey = nowTagEl.attr('data-tag');
 
-
-        for (var tagKey in tags) {
-            // if (tags[tagKey].getAttribute('data-tag').length === 0) {
-            //     continue;
-            // }
-
-            // todo: тут какая-то ошибка с перебором массива
-            if (nowTagKey === tags[tagKey].getAttribute('data-tag')) {
+        tags.each(function(ind, element) {
+            if (nowTagKey === element.getAttribute('data-tag')) {
                 if (nowTagEl.hasClass('active')) {
                     nowTagEl.removeClass('active');
                 } else {
                     nowTagEl.addClass('active');
                 }
+            } else {
+                if (element.classList.contains('active')) {
+                    element.classList.remove('active');
+                }
             }
-        }
+        });
     }
 
     /**

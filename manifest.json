@@ -1,8 +1,12 @@
 {
     "manifest_version": 2,
 
-    "name": "Выполнение js-скриптов",
+    "name": "JS Runner",
+    "short_name": "JS Runner",
     "version": "1.0",
+
+//    "default_locale": "ru",
+    "description": "Расширение для хранения и выполнения JS-скриптов",
 
     "icons": {
         "16": "icons/16x16.png",
@@ -11,7 +15,7 @@
         "128": "icons/128x128.png"
     },
     "browser_action": {
-        "default_title": "Скрипты",
+        "default_title": "JS Runner",
         "default_icon": "icons/48x48.png",
         "default_popup": "screen.html"
     },
