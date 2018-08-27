@@ -156,7 +156,7 @@ a:hover {
 .scripts-list_item .title {
 	display: block;
 	height: 100%;
-	width: calc(100% - 90px);
+	width: calc(100% - 130px);
 	float: left;
 	padding-left: 13px;
 }
@@ -200,6 +200,22 @@ a:hover {
 }
 
 #scriptsList .scripts-list_item .copy:hover {
+	opacity: 0.6;
+}
+
+#scriptsList .scripts-list_item .run {
+	background-image: url(/images/play.svg);
+	cursor: pointer;
+	float: right;
+	width: 32px;
+	height: 32px;
+	background-size: 32px 32px;
+	opacity: 1;
+	margin: 5px 15px 0 0;
+	transition: opacity 0.15s 0s ease;
+}
+
+#scriptsList .scripts-list_item .run:hover {
 	opacity: 0.6;
 }
 
