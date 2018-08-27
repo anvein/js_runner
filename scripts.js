@@ -220,11 +220,13 @@ $(document).ready(function() {
             }
 
             var script = scripts[id];
+            var code = script.code;
+            code = '$(document).ready(function() {' + code + '});';
 
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 chrome.tabs.executeScript({"file": "jquery.js"});
 
-                chrome.tabs.executeScript({"code": script.code});
+                chrome.tabs.executeScript({"code": code});
             });
         });
     }
